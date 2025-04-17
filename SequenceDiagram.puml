@@ -1,0 +1,37 @@
+@startuml
+title CheckInService – UML Sequence Diagram
+
+actor "staff : receptionist" as Receptionist
+
+participant "Bookings" as Bookings
+participant "Booking" as Booking
+participant "Tables" as Tables
+participant "Table" as Table
+participant "Services" as Services
+
+== Scan Booking ==
+Receptionist -> Bookings : getBooking(bookingID)
+
+alt valid bookingID
+    Bookings -> Booking : getBookingInformation()
+    Booking --> Bookings : string: display booking information
+else not valid bookingID
+    Bookings --> Receptionist : error message
+end
+
+== Booking Validity Check ==
+alt valid booking
+    Bookings -> Tables : allocateTable(tableID)
+    Tables -> Table : setOccupied()
+    Table --> Tables
+
+    Bookings --> Bookings : True
+    Bookings -> Booking : changeStatus()
+
+    Bookings -> Services : startService(tableID)
+    Services -> Services : addService(service)
+else unvalid booking
+    Bookings -> Bookings : checkInUnbooked()
+end
+
+@enduml

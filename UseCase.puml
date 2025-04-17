@@ -1,0 +1,65 @@
+@startuml
+left to right direction
+skinparam backgroundColor #e6f3fb
+skinparam packageBorderColor Black
+skinparam packageBackgroundColor #b3d9f5
+skinparam usecase {
+  BackgroundColor White
+  BorderColor Black
+}
+
+actor "Restaurant Staff" as Staff
+
+package "<<Restaurant>>\nStaff Subsystem" {
+    
+    usecase "Authenticate and Log In" as UC1
+    usecase "Select Restaurant Branch" as UC2
+    usecase "Assign Walk-in Customer to Table" as UC3
+    usecase "View Real-Time Table Availability" as UC4
+    usecase "Update Table Status to Occupied" as UC5
+    usecase "Check-in Reserved Customer" as UC6
+    usecase "Verify Reservation" as UC7
+    usecase "Send Order to Kitchen" as UC8
+    usecase "Manage Orders" as UC9
+    usecase "View Menu with Live Availability" as UC10
+    usecase "Create New Order" as UC11
+    usecase "Activate Pre-order" as UC12
+    usecase "Confirm or Update Pre-Order" as UC13
+    usecase "Monitor Service Progress" as UC14
+    usecase "Track Order Preparation" as UC15
+    usecase "Check Table Status" as UC16
+    usecase "Generate and Print Bill" as UC17
+    usecase "Calculate Service Charges" as UC18
+    usecase "Receive Payment" as UC19
+    usecase "Update Service Status to Completed" as UC20
+
+    Staff --> UC1
+    UC1 --> UC2 : <<include>>
+
+    Staff --> UC3
+    UC3 --> UC4 : <<include>>
+    UC3 --> UC5 : <<include>>
+
+    Staff --> UC6
+    UC6 --> UC7 : <<include>>
+    UC6 --> UC8 : <<include>>
+
+    Staff --> UC9
+    UC9 --> UC10 : <<extend>>
+    UC9 --> UC11 : <<include>>
+    UC9 --> UC8 : <<include>>
+
+    Staff --> UC12
+    UC12 --> UC13 : <<include>>
+
+    Staff --> UC14
+    UC14 --> UC15 : <<include>>
+    UC14 --> UC16 : <<include>>
+
+    Staff --> UC17
+    UC17 --> UC18 : <<include>>
+    UC17 --> UC19 : <<extend>>
+
+    UC14 --> UC20 : <<include>>
+}
+@enduml

@@ -1,0 +1,117 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+title Staff Subsystem
+
+' Classes and their attributes + methods
+
+class Tables {
+    - tables: ArrayList<Table>
+    + addTable(table: Table): void
+    + getAvailableTables(numSeats: int): ArrayList<Table>
+    + getTable(tableID: int): Table
+    + allocateTable(tableID: int): boolean
+}
+
+class Table {
+    + tableID: int
+    + numSeats: int
+    + available: boolean
+    + setOccupied(): void
+    + setAvailable(): void
+    + checkIfAvailable(): boolean
+}
+
+class Booking {
+    + bookingID: int
+    - date: string
+    - time: int
+    - numPeople: int
+    + tableID: int
+    - customerName: string
+    - contact: int
+    - email: string
+    - status: string
+    - preOrderID: int
+    + assignTable(): void
+    + changeStatus(): void
+    + getPreOrderID(): int
+    + changeDate(date: string): void
+    + changeTime(time: int): void
+    + changeNumPeople(num: int): void
+    + getBookingInformation(): string
+    + getNumPeople(): int
+}
+
+class Bookings {
+    - bookings: ArrayList<Booking>
+    + addBooking(booking: Booking): void
+    + deleteBooking(bookingID: int): void
+    + getBooking(bookingID: int): Booking
+    + getBooking(bookingID: int): string
+}
+
+class Order {
+    + orderID: int
+    - status: string
+    - orderedItems: List<Dishes>
+    + addOrderItem(dishId: int): void
+    + removeOrderItem(dishId: int): void
+    + getOrder(orderId: int): ArrayList<Dishes>
+    + setStatus(): void
+    + cancelOrder(): void
+    + getPrice(): int
+}
+
+class Receptionist {
+    + employeeID: int
+    + createBooking(date: int, time: int, numPeople: int, customerName: string, contact: int, email: string, preOrderId: int): boolean
+    + startService(tableID: int): void
+    + getAvailableTables(numSeats: int): ArrayList<Table>
+    + checkInPreBooked(bookingID: int): boolean
+    + checkInUnBooked(numSeats: int): boolean
+    + activatePreorder(preOrder: Order): void
+}
+
+class Services {
+    - ActiveServices: ArrayList<Service>
+    + addService(service: Service): void
+    + deleteService(serviceID: int): void
+    + getService(serviceID: int): Service
+    + getService(tableID: int): Service
+}
+
+class Service {
+    + serviceID: int
+    - serviceStatus: string
+    - tableID: int
+    - orderID: int
+    + changeServiceStatus(): void
+    + getTableID(): int
+    + getOrderID(): int
+}
+
+class Waiter {
+    + employeeID: int
+    + takeOrder(): void
+    + manageOrder(orderID: int): void
+    + orderService(orderID: int): void
+    + generateBill(order: Order): Bill
+    + printBill(bill: Bill): void
+    + receivePayment(bill: Bill): void
+}
+
+' Relationships
+
+Tables "1" *-- "1..*" Table : has
+Booking "1" *-- "0..1" Order : order
+Booking "1" --> "1" Table : assign
+Bookings "1" *-- "0..*" Booking
+Receptionist "1" --> "0..*" Bookings : check in
+Receptionist "1" --> "0..*" Services : create
+Services "1" *-- "0..*" Service : has
+Waiter "1" --> "0..*" Order : take
+Service --> Order
+Service --> Table
+
+@enduml

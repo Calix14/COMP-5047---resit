@@ -1,0 +1,74 @@
+@startuml
+' Global diagram settings
+skinparam backgroundColor #FFFFFF
+skinparam defaultTextAlignment center
+skinparam shadowing false
+skinparam activityBorderThickness 1
+skinparam swimlaneBorderColor Black
+
+' Custom activity colors
+skinparam activity {
+  BackgroundColor<<staff>> #D6EAF8
+  BackgroundColor<<system>> #FAD7A0
+  BorderColor Black
+  FontSize 12
+  FontName Arial
+}
+
+' Swimlanes
+|Staff|
+start
+:Scan booking QR/barcode;
+note right
+Staff scans customer reservation code
+to retrieve booking
+end note
+
+-> System : Send booking ID [bookingID];
+
+|System|
+:Validate booking ID;
+if (Booking valid?) then (Yes)
+  :Return booking info
+  (time, guests, table, etc);
+else (No)
+  :Display error message;
+  stop
+endif
+
+|Staff|
+:View booking information;
+if (Valid booking?) then (Yes)
+  :Confirm reservation;
+  :Allocate table;
+else (No)
+  :Invalid reservation;
+  stop
+endif
+
+-> System : Request table state update;
+
+|System|
+:Change table status to Occupied;
+:Send table allocation confirmation;
+
+|Staff|
+:View allocation message;
+:Change booking status to "Checked-In";
+
+-> System : Send booking status update;
+
+|System|
+:Update status to Fulfilled;
+:Send status confirmation;
+
+|Staff|
+:View status update;
+:Start table service;
+
+-> System : Trigger new service record;
+
+|System|
+:Create new service session;
+stop
+@enduml

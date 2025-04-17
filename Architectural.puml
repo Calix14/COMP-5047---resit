@@ -1,0 +1,63 @@
+@startuml
+title Sub-system Architecture - Staff Subsystem
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam dpi 160
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 60
+skinparam defaultTextAlignment center
+skinparam ArrowFontSize 12
+skinparam FontSize 14
+skinparam ComponentFontSize 16
+skinparam wrapWidth 25
+
+left to right direction
+
+' StaffMobileApp Subsystem
+package "StaffMobileApp" {
+    [GUI\n(Graphic User Interface)] as GUI
+    [Account\nManager] as AccountMgr
+    [Checkin Customer\nManager] as CheckinCustMgr
+    [Booking\nManagement] as BookingMgmt
+    [Service Manager\n(App)] as ServiceMgrApp
+    [Customer Order\nManager] as OrderMgr
+
+    GUI -down-> AccountMgr : Login
+    GUI -down-> BookingMgmt : Create\nCustomer Booking\nEdit Booking
+    GUI -right-> CheckinCustMgr : Checkin
+    GUI -down-> ServiceMgrApp : Check Table\nAvailability\nCheck Order Status\nCheck Booking
+    GUI -down-> OrderMgr : Create\nCustomer Order
+}
+
+' RestaurantCloud Subsystem
+package "RestaurantCloud" {
+    [Authentication\nManager] as AuthMgr
+    [User Data\nManager] as UserDataMgr
+    [Checkin\nManager] as CheckinMgr
+    [Booking\nManager] as BookingMgr
+    [Table\nManager] as TableMgr
+    [Service Manager\n(Cloud)] as ServiceMgrCloud
+    [Payment\nManager] as PaymentMgr
+    [Orders\nManager] as OrdersMgr
+
+    AuthMgr -right-> UserDataMgr : Check\nCredentials
+    CheckinMgr --> BookingMgr : Checkin\nPreBooked
+    CheckinMgr --> TableMgr : Checkin\nUnBooked
+    CheckinMgr --> ServiceMgrCloud : Start\nService
+    BookingMgr --> TableMgr : Find\nTable
+    ServiceMgrCloud --> PaymentMgr : Bill\nand Payment
+    ServiceMgrCloud --> OrdersMgr : View\nOrder
+}
+
+' Cross-subsystem interactions
+AccountMgr -right-> AuthMgr : login
+CheckinCustMgr -right-> CheckinMgr : Checkin\nCustomer
+BookingMgmt -right-> BookingMgr : Manage\nBooking
+ServiceMgrApp -right-> PaymentMgr : Bill and\nPayment
+ServiceMgrApp -right-> ServiceMgrCloud : Trace\nServices
+OrderMgr -right-> OrdersMgr : Order
+
+@enduml
